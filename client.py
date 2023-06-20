@@ -3,26 +3,19 @@ import socketio
 import shioaji as sj
 
 sio = socketio.Client()
+sio.connect('ws://localhost:5001')
+api = sj.Shioaji()
+accounts =  api.login("YOUR_API_KEY", "YOUR_SECRET_KEY")
+api.activate_ca(
+    ca_path="/c/your/ca/path/Sinopac.pfx",
+    ca_passwd="YOUR_CA_PASSWORD",
+    person_id="Person of this Ca",
+)
 
 
 @sio.on('get')
 def get(data):
-    print(data)  # {'from': 'server'}
-
-
-if __name__ == '__main__':
-    sio.connect('ws://localhost:5001')
-
-
-    # https://sinotrade.github.io/quickstart/
-    api = sj.Shioaji()
-    accounts =  api.login("YOUR_API_KEY", "YOUR_SECRET_KEY")
-    api.activate_ca(
-        ca_path="/c/your/ca/path/Sinopac.pfx",
-        ca_passwd="YOUR_CA_PASSWORD",
-        person_id="Person of this Ca",
-    )
-
+    # Process received data
     contract = api.Contracts.Stocks["2890"]
     order = api.Order(
         price=12,
